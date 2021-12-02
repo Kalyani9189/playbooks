@@ -1,0 +1,16 @@
+---
+- name: Installing multiple packages
+  hosts: all
+  become: true
+  gather_facts: yes
+
+  tasks:
+  - name: Installing packages
+    yum:
+      name: "{{item}}"
+      state: absent
+    with_items:
+      - git
+      - wget
+      - tree
+

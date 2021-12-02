@@ -1,0 +1,13 @@
+---
+- name: Creating files or directories
+  hosts: all
+  become: true
+
+  tasks:
+  - name: createing directory
+    file:
+      path: /home/ansadmi/projects
+      state: directory
+      mode: 0755
+      owner: ansadmi
+      group: ansadmi

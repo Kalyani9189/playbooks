@@ -1,0 +1,9 @@
+---
+- name: Creating user 
+  hosts: all
+  become: true
+  tasks:
+  - name: creating user Ram
+    user:
+     name: satya
+

@@ -1,0 +1,46 @@
+---
+- name: Installing Tomcat using Ansible Playbook
+  hosts: all
+  become: true
+  gather_facts: yes
+
+  tasks:
+  - name: Installing java
+    yum:
+      name: java
+      state: installed
+
+  - name: Downloading tomcat
+    get_url:
+      url: https://dlcdn.apache.org/tomcat/tomcat-8/v8.5.73/bin/apache-tomcat-8.5.73.tar.gz
+      dest: /opt
+      mode: 0755
+
+  - name: Extract Packages
+    unarchive: 
+      src: /opt/apache-tomcat-8.5.73.tar.gz
+      dest: /opt
+      remote_src: yes
+
+  - name: Changing Permissions
+    file:
+      path: /opt/apache-tomcat-8.5.73
+      mode: 0755
+      recurse: yes
+  
+  - name: Creating link file to start
+    file:
+      src: /opt/apache-tomcat-8.5.73/bin/startup.sh
+      dest: /usr/local/bin/tomcatup
+      state: link
+
+  - name: Creating link file to stop
+    file:
+      src: /opt/apache-tomcat-8.5.73/bin/shutdown.sh
+      dest: /usr/local/bin/tomcatdown
+      state: link
+
+  - name: start the services background
+    command: nohup ./startup.sh
+    args:
+            chdir: /opt/apache-tomcat-8.5.73/bin  
