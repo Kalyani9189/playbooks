@@ -29,26 +29,20 @@
       mode: 0755
       recurse: yes
 
-  - name: creating link file for tomcat startup.sh
-    file:
-      src: /opt/{{ tomcat_package }}/bin/{{item.tomcat_script}}
-      dest: /usr/local/bin/{{item.tomcat_command}}
-      state: link
-    loop: 
-      - { tomcat_script: startup.sh, tomcat_command: tomcatup }
-      - { tomcat_script: shutdown.sh, tomcat_command: tomcatdown }
-    notify: start tomcat 
+  - name: start tomcat
+    service: 
+      name: start tomcat
+      state: started
+    
 
-  - name: change port number
-    copy: 
-      src: /opt/apache-tomcat-8.5.73/conf/server.xml
-      dest: /opt/{{ tomcat_package }}/conf/server.xml
-      remote_src: yes
-    notify: start tomcat 
+  - copy:
+      src: index.html
+      dest: /var/www/html
+    notify: restart tomcat
 
-  handlers: 
-  - name: start tomcat 
-    shell: nohup /usr/local/bin/tomcatup
+  handlers:
+  - name: start tomcat
+    shell: nohup /opt/{{ tomcat_package }}/bin/startup.sh
 
   - name: restart tomcat
-    shell: /usr/local/bin/tomcatdown; nohup /usr/local/bin/tomcatup
+    shell: /opt/{{ tomcat_package }}/bin/shutdown.sh; nohup /opt/{{ tomcat_package }}/bin/startup.sh

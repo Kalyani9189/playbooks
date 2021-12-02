@@ -7,8 +7,8 @@
   - name: Installing httpd package
     yum:
      name: httpd
-     state: absent
+     state: installed
   - name: Starting the services
     service:
      name: httpd 
-     state: absent
+     state: started
