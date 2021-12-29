@@ -1,0 +1,37 @@
+---
+- name: Install Jenkins
+  hosts: all
+  become: true
+  gather_facts: no
+
+  tasks:
+  - name: install java
+    yum:
+      name: java-1.8.0-openjdk
+      state: installed
+
+  - name: installing wget
+    yum:
+       name: wget
+       state: installed
+
+  - name: downloading   Jenkins repo
+    get_url:
+      url: https://pkg.jenkins.io/redhat/jenkins.repo
+      dest: /etc/yum.repos.d/jenkins.repo
+
+  - name: assigning RPM Key
+    rpm_key:
+      state: present
+      key: https://pkg.jenkins.io/redhat/jenkins.io.key
+
+  - name: installing jenkins
+    yum:
+      name: jenkins
+      state: installed
+
+  - name: start jenkins services
+    service:
+       name: start services
+       state: started
+       enabled: yes
